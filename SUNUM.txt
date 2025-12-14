@@ -17,7 +17,7 @@ TRIDENT AI, sadece konut fiyatını tahmin eden bir hesap makinesi değil; konut
 Projemiz Python tabanlıdır ve Streamlit arayüzü ile çalışır. Çalıştırmak için:
 
 1. Gerekli kütüphaneleri yükleyin:
-   pip install -r requirements.txt
+   pip install -r requirements.txt  (kullanılması gereken bütün kütüphaneler burada mevcuttur, bu kısımda bir yükleme hatası alırsanız python -m komutundan yardım alabilirsiniz.)
 
 2. OpenAI API anahtarınızı tanımlayın:
    (.streamlit/secrets.toml)
@@ -92,6 +92,7 @@ Katsayı = (İlan Fiyatı / Model Tahmini)
    map sadece bir harita ozelliği değil elbette. Yatırımların uzun yıllar içinde sonuçları olduğunu düşünürsek 1990 ile 2020 yılları arasında ki kar-zarar ve başarı istatistileri doğrultusunda harita üzerinden analiz yapılanilmektedir. 
 
    Kullanıcının ihtiyacına yönelik bir çok analiz sunması da tüm bunların bir sonucudur.
+
 
 
 
