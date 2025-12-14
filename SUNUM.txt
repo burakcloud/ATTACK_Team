@@ -25,7 +25,7 @@ Projemiz Python tabanlıdır ve Streamlit arayüzü ile çalışır. Çalıştı
 3. Uygulamayı başlatın:
    streamlit run app.py
 !!! Model büyük olduğu için .pkl githubda zip olarak mevcut, kullanım için models içinde bulunan .pkl dosyasını zip'ten çıkarmanız gerekiyor.
-!!! API ler otomatik olarak sağlayıcı firmalar tarafınran public arenade bloke edildiği için githuba yükleyemediğim ve ozelden ilettiğim API yi kullanmak gerekmekte. Kullanımı aşağıda anlatılmıştır.
+!!! API ler otomatik olarak sağlayıcı firmalar tarafından public arenada bloke edildiği için githuba yükleyemedim ve ozelden ilettiğim API yi kullanmak gerekmekte. Kullanımı aşağıda anlatılmıştır.
 ------------------------------------------------------------------------
 3. VERİ ÖN İŞLEME YAKLAŞIMI (Data Engineering)
 ------------------------------------------------------------------------
@@ -92,6 +92,7 @@ Katsayı = (İlan Fiyatı / Model Tahmini)
    map sadece bir harita ozelliği değil elbette. Yatırımların uzun yıllar içinde sonuçları olduğunu düşünürsek 1990 ile 2020 yılları arasında ki kar-zarar ve başarı istatistileri doğrultusunda harita üzerinden analiz yapılanilmektedir. 
 
    Kullanıcının ihtiyacına yönelik bir çok analiz sunması da tüm bunların bir sonucudur.
+
 
 
 
