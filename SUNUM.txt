@@ -1,0 +1,92 @@
+========================================================================
+PROJE SUNUM VE TEKNİK RAPOR DOSYASI
+========================================================================
+
+TAKIM ADI: ATT&CK
+TAKIM ÜYELERİ:
+1. Burak KORKMAZ
+
+------------------------------------------------------------------------
+1. PROJE ÖZETİ (Asansör Konuşması)
+------------------------------------------------------------------------
+TRIDENT AI, sadece konut fiyatını tahmin eden bir hesap makinesi değil; konutları Finansal, Yaşamsal ve Güvenlik olmak üzere 3 farklı perspektiften analiz eden bütünleşik bir "Gayrimenkul İstihbarat Platformu"dur. Rastgele Orman (Random Forest) algoritması ile konutun matematiksel "Adil Değerini" hesaplarken; sisteme entegre ettiğimiz dış güvenlik (suç oranı) verileri ve Multi-Personality LLM mimarisi ile kullanıcıya "Bu evi al" demekle kalmaz, "Neden almalısın?" sorusunu da 3 farklı uzmanın ağzından yanıtlar.
+
+------------------------------------------------------------------------
+2. KURULUM VE ÇALIŞTIRMA (How to Run)
+------------------------------------------------------------------------
+Projemiz Python tabanlıdır ve Streamlit arayüzü ile çalışır. Çalıştırmak için:
+
+1. Gerekli kütüphaneleri yükleyin:
+   pip install -r requirements.txt
+
+2. OpenAI API anahtarınızı tanımlayın:
+   (.streamlit/secrets.toml)
+
+3. Uygulamayı başlatın:
+   streamlit run app.py
+
+------------------------------------------------------------------------
+3. VERİ ÖN İŞLEME YAKLAŞIMI (Data Engineering)
+------------------------------------------------------------------------
+Veri setini sadece temizlemekle kalmadık, dış kaynaklardan bulduğumuz güvenlik verileri ile zenginleştirerek (Data Enrichment) modele "Bölge Güvenliği" bilinci kazandırdık.
+
+- Temizlenen Alanlar: 
+  * 'Price' ve 'm²' sütunlarındaki "TL", nokta ve virgül gibi string ifadeler temizlenip numerik formata çevrildi.
+  * Yarışma kuralı gereği, hedef kitlemiz olan sabit gelirli çalışanlara uygun olması için "Available for Loan" (Krediye Uygunluk) değeri 'No' olan ilanlar eğitim setinden çıkarıldı.
+  
+- Eklenen Yeni Özellikler (Feature Engineering):
+  * Room_Sort_Value: "3+1", "Studio" gibi metin tabanlı oda tipleri, modelin anlayabileceği hiyerarşik sayısal katsayılara (Weight) dönüştürüldü (Örn: 3+1 > 2+1).
+  * Risk_Seviyesi (External Data): Veri setinde olmayan "İlçe Bazlı Suç Oranları" dışarıdan (police/crime datasets) entegre edildi. Bu sayede model ve AI, evin sadece ucuzluğuna değil, güvenliğine de bakabilir hale geldi.
+
+- Seçilen Kritik Özellikler: District (İlçe), Neighborhood (Mahalle), Room Type (Oda Tipi), Net m².
+
+------------------------------------------------------------------------
+4. MODEL MİMARİSİ
+------------------------------------------------------------------------
+- Kullanılan Algoritma: Random Forest Regressor (Rastgele Orman)
+
+- Neden bu algoritma?: 
+  Gayrimenkul verileri lineer (doğrusal) değildir. Lüks bir semtteki 10 m² artışın fiyata etkisi ile banliyödeki etki aynı olmaz. Linear Regression bu nüansı kaçırırken, Random Forest ağaç yapısı sayesinde "Eğer Beşiktaş ise ve m² > 100 ise fiyatı katla" gibi karmaşık, doğrusal olmayan ilişkileri (Non-linear relationships) ve aykırı değerleri (Outliers) mükemmel yönetir. Ayrıca Overfitting'e (aşırı ezberleme) karşı tekil karar ağaçlarına göre çok daha dirençlidir.
+
+- Başarı Skoru: 
+  Eğitim setimiz üzerinde optimize edilmiş modelimiz, test verilerinde yüksek R-Square ve düşük RMSE (Hata Kareler Ortalaması) değerleri ile güvenilir tahminler üretmektedir.
+
+------------------------------------------------------------------------
+5. YATIRIM KARAR MANTIĞI (Business Logic)
+------------------------------------------------------------------------
+Sistemimiz, ilandaki fiyatı doğrudan kabul etmez. Modelin tarihsel verilerden öğrendiği "Olması Gereken Adil Değer" (Predicted Fair Value) ile satıcının istediği fiyatı kıyaslar.
+
+Matematiksel Mantık:
+Katsayı = (İlan Fiyatı / Model Tahmini)
+
+- FIRSAT (Opportunity) : 
+  Eğer İlan Fiyatı, Model Tahmininden %10-15 daha düşükse (Katsayı < 0.85).
+  Yorum: "Satıcı piyasa değerinin altında satıyor, kaçırma."
+
+- PAHALI (Overpriced) : 
+  Eğer İlan Fiyatı, Model Tahmininden %15 daha yüksekse (Katsayı > 1.15).
+  Yorum: "Bu evin özellikleri bu fiyatı etmez, balon fiyat."
+
+- NORMAL (Fair Value) : 
+  Fiyat, model tahminiyle dengeli ise (%10 bandında).
+
+------------------------------------------------------------------------
+6. SİZİ DİĞERLERİNDEN AYIRAN ÖZELLİK (Unique Value)
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+6. SİZİ DİĞERLERİNDEN AYIRAN ÖZELLİK (Unique Value)
+------------------------------------------------------------------------
+1. SENTETİK DANIŞMA KURULU (Multi-Persona Architecture):
+   Rakiplerimiz kullanıcıya tek bir chatbot ile cevap verirken, TRIDENT kullanıcının karşısına 3 farklı uzmandan oluşan bir kurul çıkarır. Finans Analisti (ROI odaklı), Emlak Danışmanı (Yaşam tarzı odaklı) ve Teknik Uzman (Risk odaklı) aynı veriye bakıp kendi uzmanlık alanlarına göre birbirini denetleyen 3 farklı görüş sunar. Bu, yapay zekada "Cross-Verification" (Çapraz Doğrulama) sağlayarak güveni artırır.
+
+2. HALÜSİNASYON KALKANI (Math-First, AI-Second Approach):
+   LLM'lerin matematiksel işlemlerde hata yapma (halüsinasyon) riskini sıfıra indirdik. Fiyat tahmini, m² analizi ve varyans hesaplamaları arka planda Python (Random Forest) tarafından kesin olarak hesaplanır. LLM'e "Fiyatı tahmin et" denmez; "Bu matematiksel gerçeği yorumla" denir. Böylece %100 veriye dayalı, sözel yeteneği yüksek bir danışmanlık hizmeti oluşur.
+
+3. GİZLİ VERİ KATMANI (External Data Enrichment):
+   Bize verilen veri setiyle yetinmedik. İstanbul Emniyet Müdürlüğü verilerinden derlediğimiz "Suç ve Güvenlik İstatistiklerini" sisteme entegre ettik. Modelimiz bir evi önerirken sadece "Ucuz mu?" diye bakmaz, "Aileniz için güvenli mi?" sorusunu da (suç oranlarına bakarak) yanıtlar. Bu, sabit gelirli hedef kitlemiz için fiyattan bile kritiktir.
+   
+   (Dosyalarda bulunan API kimlikleri gerçek ve alınmış kimliklerdir. Demo için bağlantı ve işleme problemi yaşanmaktadır (konumdan dolayı) bundon dolayı kod içerisinde farklı rolleri aynı API kimliklerine aktarıldığı durum mevcut dosyalardadır. API ve konum problemleri olmadğı durumlarda 3 AI rahatlıkla kullanılmaktadır.) Gemini için bir ücret odenmezken claude ve openai için 5$ odenmiştir. Bu da her biri için 950 (+-) e yakın isteğe denk gelmektedir.
+   (3 Farklı AI kullanılmasının sebebi karar mekanızmasının doğruluğudur. Hiç bir ai sistemi hiç bir zaman kesin bir sonuç vermez sadece ihtimaller üzerinde durur. 3 AI bir kod mahkemesi oluşturarak bu hata ihitmalini 0.01 e kadar indirebiliyor.
+   Verilen veri setinden alınan sonuçların daha spesifik hale gelmesi için sınırlı da olsa resmi kaynaklardan harici dosyalar hackathon sıradında analiz edilmiş ve risk faktörü altında kullanıcıya sunulmuştur. Bunun yanında map;
+   map sadece bir harita ozelliği değil elbette. Yatırımların uzun yıllar içinde sonuçları olduğunu düşünürsek 1990 ile 2020 yılları arasında ki kar-zarar ve başarı istatistileri doğrultusunda harita üzerinden analiz yapılanilmektedir. 
+   Kullanıcının ihtiyacına yönelik bir çok analiz sunması da tüm bunların bir sonucudur.

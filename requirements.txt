@@ -1,0 +1,12 @@
+streamlit
+pandas
+numpy
+altair
+scikit-learn
+openai
+anthropic
+google-generativeai
+pydeck
+folium
+matplotlib
+watchdog
