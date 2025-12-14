@@ -10,3 +10,4 @@ pydeck
 folium
 matplotlib
 watchdog
+plotly
