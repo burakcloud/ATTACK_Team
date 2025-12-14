@@ -11,3 +11,5 @@ folium
 matplotlib
 watchdog
 plotly
+Pillow
+requests
