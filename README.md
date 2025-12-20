@@ -1,4 +1,4 @@
-# 🦅 ATTACK TEAM - TRIDENT AI
+#  TRIDENT AI
 
 > AI Spark Hackathon 2025 Projesi
 
